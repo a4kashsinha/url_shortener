@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const ShortUrl = require('./models/shortUrl')
+const ShortUrl = require('./models/shortUrl');
+const shortUrl = require('./models/shortUrl');
 const app = express()
 
 mongoose.connect('mongodb://localhost/urlShortener', {
@@ -11,8 +12,9 @@ mongoose.connect('mongodb://localhost/urlShortener', {
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({extended: false}))
 
-app.get('/', (req, res) => {
-    res.render('index')
+app.get('/', async (req, res) => {
+    const shortUrls = await shortUrl.find()
+    res.render('index', { shortUrls: shortUrls })
 })
 
 app.post('/shortURLs', async(req, res) => {
